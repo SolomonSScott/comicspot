@@ -1,0 +1,13 @@
+{
+    "name": "solomonsscott/comicspot",
+    "require-dev": {
+        "phpunit/phpunit": "4.0",
+        "wp-coding-standards/wpcs": "^0.11.0"
+    },
+    "authors": [
+        {
+            "name": "Solomon Scott",
+            "email": "solomon.s.scott@gmail.com"
+        }
+    ]
+}
