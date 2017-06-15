@@ -1,6 +1,6 @@
 <?php
 
-class Comicspot_Post_Type {
+class Comicspot_Taxonomy {
 
 	public $slug;
 
@@ -8,21 +8,28 @@ class Comicspot_Post_Type {
 
 	public $singular;
 
+	public $post_type = array();
+
 	public $args = array();
 
-	public function __construct( $slug, $singular, $plural, $args = null ) {
-		$this->slug     = $slug;
-		$this->singular = $singular;
-		$this->plural   = $plural;
+	public function __construct( $slug, $singular, $plural, $post_type, $args = null ) {
+		$this->slug     	= $slug;
+		$this->singular 	= $singular;
+		$this->plural   	= $plural;
+		$this->post_type 	= $post_type;
 
 		if ( is_null($args) ) {
 			$this->args = array(
 				'label'           => __( $this->slug, COMICSPOT__PLUGIN_NAME ),
 				'description'     => __( '', COMICSPOT__PLUGIN_NAME ),
 				'labels'          => $this->labels(),
+				'hierarchical'    => false,
+				'show_ui'         => true,
 				'public'          => TRUE,
 				'has_archive'     => TRUE,
-				'capability_type' => 'post',
+				'rewrite'         => array(
+					'slug' => $this->slug
+				),
 			);
 		} else {
 			$this->args = $args;
@@ -30,13 +37,13 @@ class Comicspot_Post_Type {
 	}
 
 	public function init() {
-		add_action( 'init', array( $this, 'register_post_type' ), 0 );
+		add_action( 'init', array( $this, 'register_taxonomy' ), 0 );
 	}
 
 	public function labels() {
 		$labels = array(
-			'name'               => _x( $this->plural, 'Post Type General Name', COMICSPOT__PLUGIN_NAME ),
-			'singular_name'      => _x( $this->singular, 'Post Type Singular Name', COMICSPOT__PLUGIN_NAME ),
+			'name'               => _x( $this->plural, 'Taxonomy General Name', COMICSPOT__PLUGIN_NAME ),
+			'singular_name'      => _x( $this->singular, 'Taxonomy Singular Name', COMICSPOT__PLUGIN_NAME ),
 			'menu_name'          => __( $this->plural, COMICSPOT__PLUGIN_NAME ),
 			'parent_item_colon'  => __( 'Parent ' . $this->singular, COMICSPOT__PLUGIN_NAME ),
 			'all_items'          => __( 'All ' . $this->plural, COMICSPOT__PLUGIN_NAME ),
@@ -58,7 +65,7 @@ class Comicspot_Post_Type {
 		return $args;
 	}
 
-	public function register_post_type() {
-		register_post_type( $this->slug, $this->arguments() );
+	public function register_taxonomy() {
+		register_taxonomy( $this->slug, $this->post_type, $this->arguments() );
 	}
 }
